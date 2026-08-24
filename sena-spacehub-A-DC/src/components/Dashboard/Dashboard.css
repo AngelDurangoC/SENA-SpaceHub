@@ -1,0 +1,222 @@
+.dashboard-container {
+  color: #ffffff;
+  background-color: #0b0f19;
+  padding: 24px;
+  border-radius: 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 4px 0 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.system-status {
+  background-color: #064e3b;
+  color: #34d399;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #059669;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #34d399;
+  border-radius: 50%;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.stat-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.card-subtext {
+  font-size: 0.8rem;
+}
+
+.green-text { color: #10b981; }
+.blue-text { color: #3b82f6; }
+.yellow-text { color: #f59e0b; }
+
+.dashboard-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chart-header h3 {
+  font-size: 0.85rem;
+  margin: 0;
+  color: #d1d5db;
+  font-weight: 600;
+}
+
+.live-tag, .week-tag {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.progress-group {
+  margin-bottom: 16px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: #e5e7eb;
+}
+
+.progress-bar {
+  background-color: #1f2937;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.progress-fill.green { background-color: #10b981; }
+.progress-fill.blue { background-color: #3b82f6; }
+.progress-fill.yellow { background-color: #f59e0b; }
+
+.chart-content {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.donut-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donut-chart {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(#10b981 0% 83%, #f59e0b 83% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center {
+  width: 70px;
+  height: 70px;
+  background-color: #111827;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-number {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.donut-label {
+  font-size: 0.6rem;
+  color: #9ca3af;
+}
+
+.legend {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 0.75rem;
+}
+
+.weekly-chart {
+  flex: 1;
+  background-color: #0b0f19;
+  border-radius: 8px;
+  padding: 12px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.weekly-title {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.days-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.active-day {
+  color: #10b981;
+  font-weight: bold;
+}
