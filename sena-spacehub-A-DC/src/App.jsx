@@ -6,16 +6,18 @@ import Prestamos from "./components/Prestamos/Prestamos.jsx";
 import Ticketera from "./components/Ticketera/Ticketera.jsx";
 import Login from "./components/Login/Login.jsx";
 import Registro from "./components/Registro/Registro.jsx";
+import NuevoEquipoPage from "./pages/NuevoEquipoPage/NuevoEquipoPage.tsx";
+import DetalleEquipoPage from "./pages/DetalleEquipoPage/DetalleEquipoPage.tsx";
+import MainLayout from "./layouts/MainLayout/MainLayout.tsx";
 import {
   BrowserRouter,
   Navigate,
-  NavLink,
-  Outlet,
   Route,
   Routes,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
 
 const usuariosIniciales = [
   {
@@ -47,62 +49,8 @@ const ticketsIniciales = [
   { id: 2, equipoPlaca: "SENA-1005", prioridad: "Media", descripcion: "Batería no retiene carga más de 30 minutos" }
 ];
 
-function MainLayout({ equipos, prestamos, tickets, usuarioActual, esAdmin, cambiarRolRapido, irA }) {
-  const location = useLocation();
-
-  return (
-    <div className="app-container">
-      <header className="global-header">
-        <div className="nav-top-bar">
-          <div className="brand-section">
-            <span className="brand-badge">SENA SpaceHub</span>
-            <span className="brand-sub">Centro de Gestión de Mercados, Logística y TI</span>
-          </div>
-
-          <nav className="nav-menu">
-            <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>
-              📊 Dashboard
-            </NavLink>
-            <NavLink to="/inventario" className={({ isActive }) => isActive ? "active" : ""}>
-              💻 Inventario ({equipos.length})
-            </NavLink>
-            <NavLink to="/prestamos" className={({ isActive }) => isActive ? "active" : ""}>
-              📋 Préstamos ({prestamos.length})
-            </NavLink>
-            <NavLink to="/ticket" className={({ isActive }) => isActive ? "active" : ""}>
-              🛠️ Ticketera ({tickets.length})
-            </NavLink>
-          </nav>
-        </div>
-
-        <div className="user-info-bar">
-          <div className="user-chip">
-            <span className="online-dot"></span>
-            <strong>{usuarioActual?.nombre || "Usuario"}</strong>
-            <span className="role-tag">{usuarioActual?.rol || "Aprendiz"}</span>
-            <button className="btn-salir" onClick={() => irA("login")}>Salir</button>
-          </div>
-
-          <div className="mode-banner">
-            <span>
-              🕹️ Modo <strong>{esAdmin ? "Operador/Admin" : "Aprendiz ADSO"}</strong> activo.
-            </span>
-            <button className="btn-switch-role" onClick={cambiarRolRapido}>
-              ⚡ Cambiar a {esAdmin ? "Aprendiz" : "Operador/Admin"}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="main-content">
-        <Outlet context={{ location }} />
-      </main>
-    </div>
-  );
-}
-
 function App() {
-  const [usuarioActual, setUsuarioActual] = useState(usuariosIniciales[0]);
+  const { user: usuarioActual, loginSimulado, logout } = useAuth();
   const navigate = useNavigate();
 
   const [usuarios, setUsuarios] = useState(() => {
@@ -139,25 +87,33 @@ function App() {
 
   const irA = (nuevaVista) => navigate(nuevaVista === "dashboard" ? "/" : `/${nuevaVista}`);
 
+  const cerrarSesion = () => {
+    logout();
+    navigate("/login");
+  };
+
   const cambiarRolRapido = () => {
-    if (usuarioActual?.rol === "Admin") {
-      setUsuarioActual(usuariosIniciales[0]);
+    if (usuarioActual?.rol === "Administrador") {
+      loginSimulado("ana@sena.edu.co", "Aprendiz");
     } else {
-      setUsuarioActual(usuariosIniciales[1]);
+      loginSimulado("roberto@sena.edu.co", "Administrador");
     }
   };
 
-  const esAdmin = usuarioActual?.rol === "Admin";
+  const esAdmin = usuarioActual?.rol === "Administrador" || usuarioActual?.rol === "Admin";
 
   return (
     <Routes>
-      <Route path="/" element={<MainLayout equipos={equipos} prestamos={prestamos} tickets={tickets} usuarioActual={usuarioActual} esAdmin={esAdmin} cambiarRolRapido={cambiarRolRapido} irA={irA} />}>
-        <Route index element={<Dashboard equipos={equipos} prestamos={prestamos} tickets={tickets} />} />
-        <Route path="inventario" element={<Inventario equipos={equipos} setEquipos={setEquipos} usuarioActual={usuarioActual} />} />
-        <Route path="prestamos" element={<Prestamos prestamos={prestamos} setPrestamos={setPrestamos} equipos={equipos} usuarioActual={usuarioActual} />} />
-        <Route path="ticket" element={<Ticketera tickets={tickets} setTickets={setTickets} equipos={equipos} />} />
+      <Route path="/" element={<MainLayout equipos={equipos} prestamos={prestamos} tickets={tickets} usuarioActual={usuarioActual} esAdmin={esAdmin} cambiarRolRapido={cambiarRolRapido} cerrarSesion={cerrarSesion} />}>
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<ProtectedRoute><Dashboard equipos={equipos} prestamos={prestamos} tickets={tickets} /></ProtectedRoute>} />
+        <Route path="inventario" element={<ProtectedRoute><Inventario equipos={equipos} setEquipos={setEquipos} usuarioActual={usuarioActual} /></ProtectedRoute>} />
+        <Route path="inventario/nuevo" element={<ProtectedRoute rolPermitido="Administrador"><NuevoEquipoPage equipos={equipos} setEquipos={setEquipos} /></ProtectedRoute>} />
+        <Route path="inventario/:placaSena" element={<ProtectedRoute><DetalleEquipoPage equipos={equipos} /></ProtectedRoute>} />
+        <Route path="prestamos" element={<ProtectedRoute><Prestamos prestamos={prestamos} setPrestamos={setPrestamos} equipos={equipos} usuarioActual={usuarioActual} /></ProtectedRoute>} />
+        <Route path="ticket" element={<ProtectedRoute><Ticketera tickets={tickets} setTickets={setTickets} equipos={equipos} /></ProtectedRoute>} />
       </Route>
-      <Route path="/login" element={<Login irA={irA} usuarios={usuarios} setUsuarioActual={setUsuarioActual} />} />
+      <Route path="/login" element={<Login irA={irA} usuarios={usuarios} />} />
       <Route path="/registro" element={<Registro irA={irA} usuarios={usuarios} setUsuarios={setUsuarios} />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

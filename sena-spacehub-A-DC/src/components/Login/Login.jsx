@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "./Login.css";
+import { useAuth } from "../../context/AuthContext";
 
-export default function Login({ irA, usuarios, setUsuarioActual }) {
+export default function Login({ irA, usuarios }) {
+  const { loginSimulado } = useAuth();
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const loginRapido = (user) => {
-    setUsuarioActual(user);
+    loginSimulado(user.correo, user.rol === "Admin" ? "Administrador" : user.rol);
     irA("dashboard");
   };
 
@@ -18,7 +20,10 @@ export default function Login({ irA, usuarios, setUsuarioActual }) {
     );
 
     if (usuarioEncontrado) {
-      setUsuarioActual(usuarioEncontrado);
+      loginSimulado(
+        usuarioEncontrado.correo,
+        usuarioEncontrado.rol === "Admin" ? "Administrador" : usuarioEncontrado.rol
+      );
       irA("dashboard");
     } else {
       setError("Correo o contraseña incorrectos");

@@ -4,12 +4,16 @@
   padding: 24px;
   border-radius: 12px;
   font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .prestamos-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -85,12 +89,11 @@
   border-radius: 8px;
   font-size: 0.825rem;
   margin-bottom: 20px;
-  line-height: 1.4;
 }
 
 .inputs-prestamo-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 16px;
   margin-bottom: 20px;
 }
@@ -130,6 +133,7 @@
 .form-actions-right {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -159,6 +163,27 @@
 
 .btn-primary-green:hover {
   background-color: #059669;
+}
+
+@media (max-width: 560px) {
+  .prestamos-container {
+    padding: 16px;
+  }
+
+  .prestamos-header > *,
+  .form-actions-right > * {
+    width: 100%;
+  }
+
+  .form-actions-right {
+    flex-direction: column;
+  }
+
+  .btn-solicitar-top,
+  .btn-cancelar,
+  .btn-primary-green {
+    width: 100%;
+  }
 }
 
 .prestamos-cards-grid {

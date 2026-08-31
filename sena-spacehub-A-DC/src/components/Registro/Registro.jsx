@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../Login/Login.css";
+import "./Registro.css";
 
 export default function Registro({ irA, usuarios, setUsuarios }) {
   const [nombre, setNombre] = useState("");
@@ -40,10 +40,18 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
 
   return (
     <div className="auth-container">
-      <div className="auth-card dark-theme">
-        <h2 className="title-dark">Crear Cuenta</h2>
+      <div className="register-card">
+        <div className="register-heading">
+          <span className="register-mark">S</span>
+          <div>
+            <p className="register-eyebrow">SENA SPACEHUB</p>
+            <h2>Crear Cuenta</h2>
+            <p className="register-description">Únete al centro de gestión de equipos tecnológicos.</p>
+          </div>
+        </div>
+
         <form onSubmit={handleRegistro}>
-          <div className="form-group">
+          <div className="register-form-group">
             <label>Nombre Completo</label>
             <input
               type="text"
@@ -53,7 +61,7 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
               placeholder="Ej. Carlos Pérez"
             />
           </div>
-          <div className="form-group">
+          <div className="register-form-group">
             <label>Correo Electrónico</label>
             <input
               type="email"
@@ -63,7 +71,7 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
               placeholder="correo@ejemplo.com"
             />
           </div>
-          <div className="form-group">
+          <div className="register-form-group">
             <label>Rol / Tipo</label>
             <select value={rol} onChange={(e) => setRol(e.target.value)}>
               <option value="Aprendiz">Aprendiz</option>
@@ -72,7 +80,7 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
           </div>
 
           {rol === "Aprendiz" && (
-            <div className="form-group">
+            <div className="register-form-group">
               <label>Número de Ficha</label>
               <input
                 type="text"
@@ -84,7 +92,7 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
             </div>
           )}
 
-          <div className="form-group">
+          <div className="register-form-group">
             <label>Contraseña</label>
             <input
               type="password"
@@ -94,9 +102,9 @@ export default function Registro({ irA, usuarios, setUsuarios }) {
               placeholder="********"
             />
           </div>
-          <button type="submit" className="btn-primary w-100">Registrarse</button>
+          <button type="submit" className="register-submit">Registrarse</button>
         </form>
-        <p className="footer-link">
+        <p className="register-footer">
           ¿Ya tienes cuenta?{" "}
           <span onClick={() => irA("login")} className="link">
             Inicia sesión
