@@ -1,64 +1,19 @@
-import { NavLink } from "react-router-dom";
+// =================================================================
+// Archivo: src/components/NavBar/NavBar.tsx
+//RESPONSABILIDAD: Barra de navegación superior con enlaces a los módulos principales.
+// =================================================================
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-interface NavbarProps {
-  equipos: unknown[];
-  prestamos: unknown[];
-  tickets: unknown[];
-  usuarioActual: { nombre?: string; rol?: string } | null;
-  esAdmin: boolean;
-  cambiarRolRapido: () => void;
-  cerrarSesion: () => void;
-}
-
-export default function Navbar({
-  equipos,
-  prestamos,
-  tickets,
-  usuarioActual,
-  esAdmin,
-  cambiarRolRapido,
-  cerrarSesion,
-}: NavbarProps) {
+export default function NavBar() {
   return (
-    <header className="global-header">
-      <div className="nav-top-bar">
-        <div className="brand-section">
-          <span className="brand-badge">SENA SpaceHub</span>
-          <span className="brand-sub">Centro de Gestión de Mercados, Logística y TI</span>
-        </div>
-
-        <nav className="nav-menu">
-          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
-            📊 Dashboard
-          </NavLink>
-          <NavLink to="/inventario" className={({ isActive }) => isActive ? "active" : ""}>
-            💻 Inventario ({equipos.length})
-          </NavLink>
-          <NavLink to="/prestamos" className={({ isActive }) => isActive ? "active" : ""}>
-            📋 Préstamos ({prestamos.length})
-          </NavLink>
-          <NavLink to="/ticket" className={({ isActive }) => isActive ? "active" : ""}>
-            🛠️ Ticketera ({tickets.length})
-          </NavLink>
+    <header className="bg-slate-800 border-b border-slate-700 px-6 py-3 flex items-center justify-between shadow-md">
+      <div className="flex items-center gap-6">
+        <span className="font-extrabold text-sena-green tracking-tight text-lg">SENA SpaceHub</span>
+        <nav className="flex gap-4 text-xs font-mono">
+          <Link to="/dashboard" className="text-slate-300 hover:text-sena-green transition font-bold">Dashboard</Link>
+          <Link to="/inventario" className="text-slate-300 hover:text-sena-green transition font-bold">Inventario Equipos</Link>
         </nav>
-      </div>
-
-      <div className="user-info-bar">
-        <div className="user-chip">
-          <span className="online-dot"></span>
-          <strong>{usuarioActual?.nombre || "Usuario"}</strong>
-          <span className="role-tag">{usuarioActual?.rol || "Aprendiz"}</span>
-          <button className="btn-salir" onClick={cerrarSesion}>Salir</button>
-        </div>
-
-        <div className="mode-banner">
-          <span>
-            🕹️ Modo <strong>{esAdmin ? "Operador/Admin" : "Aprendiz ADSO"}</strong> activo.
-          </span>
-          <button className="btn-switch-role" onClick={cambiarRolRapido}>
-            ⚡ Cambiar a {esAdmin ? "Aprendiz" : "Operador/Admin"}
-          </button>
-        </div>
       </div>
     </header>
   );

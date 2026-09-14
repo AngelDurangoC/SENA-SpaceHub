@@ -9,22 +9,23 @@ export default function Login({ irA, usuarios }) {
   const [error, setError] = useState("");
 
   const loginRapido = (user) => {
-    loginSimulado(user.correo, user.rol === "Admin" ? "Administrador" : user.rol);
-    irA("dashboard");
+    const rol = user.rol === "Admin" || user.rol === "Administrador" ? "Administrador" : user.rol;
+    loginSimulado(user.correo || user.email, rol);
+    irA("/dashboard");
   };
 
   const handleManualLogin = (e) => {
     e.preventDefault();
     const usuarioEncontrado = usuarios.find(
-      (u) => u.correo === correo && u.password === password
+      (u) => (u.correo || u.email) === correo && u.password === password
     );
 
     if (usuarioEncontrado) {
-      loginSimulado(
-        usuarioEncontrado.correo,
-        usuarioEncontrado.rol === "Admin" ? "Administrador" : usuarioEncontrado.rol
-      );
-      irA("dashboard");
+      const rol = usuarioEncontrado.rol === "Admin" || usuarioEncontrado.rol === "Administrador"
+        ? "Administrador"
+        : usuarioEncontrado.rol;
+      loginSimulado(usuarioEncontrado.correo || usuarioEncontrado.email, rol);
+      irA("/dashboard");
     } else {
       setError("Correo o contraseña incorrectos");
     }
@@ -33,7 +34,6 @@ export default function Login({ irA, usuarios }) {
   return (
     <div className="auth-container">
       <div className="auth-card dark-theme">
-        
         <div className="quick-login-section">
           <p className="quick-login-title">Probar como:</p>
 
@@ -58,7 +58,6 @@ export default function Login({ irA, usuarios }) {
           })}
         </div>
 
-        
         <div className="divider">
           <span>O ingresa manualmente</span>
         </div>
@@ -90,7 +89,7 @@ export default function Login({ irA, usuarios }) {
 
         <p className="footer-link">
           ¿No tienes cuenta?{" "}
-          <span onClick={() => irA("registro")} className="link">
+          <span onClick={() => irA("/registro")} className="link">
             Regístrate aquí
           </span>
         </p>
