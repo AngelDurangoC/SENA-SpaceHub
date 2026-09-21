@@ -13,17 +13,27 @@ export default function PrestamosPage() {
   const { isAdmin, user } = useAuth();
 
   const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const [prestamosData, equiposData] = await Promise.all([prestamosService.getAll(), equiposService.getAll()]);
-      setPrestamos(prestamosData);
-      setEquipos(equiposData);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'No se pudieron cargar los préstamos');
-    } finally {
-      setLoading(false);
+    setLoading(true);
+    setError(null);
+
+    const [prestamosResult, equiposResult] = await Promise.allSettled([
+      prestamosService.getAll(),
+      equiposService.getAll(),
+    ]);
+
+    if (prestamosResult.status === 'fulfilled') {
+      setPrestamos(prestamosResult.value);
+    } else {
+      setError(prestamosResult.reason instanceof Error ? prestamosResult.reason.message : 'No se pudieron cargar los préstamos');
     }
+
+    if (equiposResult.status === 'fulfilled') {
+      setEquipos(equiposResult.value);
+    } else if (!error) {
+      setError(equiposResult.reason instanceof Error ? equiposResult.reason.message : 'No se pudieron cargar los equipos');
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => { loadData(); }, []);
@@ -54,7 +64,7 @@ export default function PrestamosPage() {
     <section className="loans-page">
       <div className="loans-heading">
         <div><p className="section-kicker">CONTROL DE RECURSOS</p><h2>Gestión de préstamos</h2><p>Asignaciones, tiempos de salida y devoluciones.</p></div>
-        <button type="button" className="primary-action" onClick={() => setIsModalOpen(true)}>+ Nuevo préstamo</button>
+        <button type="button" className="primary-action" onClick={() => setIsModalOpen(true)} disabled={!equipos.length}>+ Nuevo préstamo</button>
       </div>
       {error && <div className="inventory-error">{error}</div>}
       <div className="inventory-table-wrap">

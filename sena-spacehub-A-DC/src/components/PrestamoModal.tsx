@@ -48,7 +48,7 @@ export default function PrestamoModal({ isOpen, onClose, onSubmit, isAdmin, defa
           <div className="form-field">
             <label htmlFor="loanEquipment">Seleccionar equipo</label>
             <select id="loanEquipment" required value={equipoPlaca} onChange={(event) => setEquipoPlaca(event.target.value)}>
-              <option value="">Selecciona un equipo operativo</option>
+              <option value="">{equipos.length ? 'Selecciona un equipo operativo' : 'No hay equipos disponibles'}</option>
               {equipos.filter((equipo) => equipo.estado === 'Operativo').map((equipo) => (
                 <option key={equipo.id} value={equipo.placaSena}>{equipo.placaSena} · {equipo.marcaModelo}</option>
               ))}
@@ -64,7 +64,7 @@ export default function PrestamoModal({ isOpen, onClose, onSubmit, isAdmin, defa
           </div>
           <div className="editor-actions">
             <button type="button" className="secondary-action" onClick={onClose}>Cancelar</button>
-            <button type="submit" className="primary-action" disabled={loading}>{loading ? 'Guardando...' : 'Asignar equipo'}</button>
+            <button type="submit" className="primary-action" disabled={loading || !equipos.some((equipo) => equipo.estado === 'Operativo')}>{loading ? 'Guardando...' : 'Asignar equipo'}</button>
           </div>
         </form>
       </div>
