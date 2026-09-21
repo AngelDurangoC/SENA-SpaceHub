@@ -11,6 +11,13 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface RegisterData {
+  nombreCompleto: string;
+  email: string;
+  password: string;
+  role: 'Aprendiz' | 'Instructor';
+}
+
 export interface AuthResponse {
   statusCode: number;
   message: string;
@@ -23,6 +30,13 @@ export const authService = {
     return apiFetch<AuthResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
+    });
+  },
+
+  register: async (data: RegisterData): Promise<{ message: string; user: User }> => {
+    return apiFetch<{ message: string; user: User }>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
   },
 

@@ -61,6 +61,21 @@ app.post('/api/v1/auth/login', (req, res) => {
   return res.json({ statusCode: 200, message: 'Autenticación exitosa', accessToken, user: { id: user.id, nombreCompleto: user.nombreCompleto, email: user.email, role: user.role } });
 });
 
+app.post('/api/v1/auth/register', (req, res) => {
+  const { nombreCompleto, email, password, role = 'Aprendiz' } = req.body;
+  if (!nombreCompleto || !email || !password) {
+    return res.status(400).json({ statusCode: 400, message: 'Nombre, correo y contraseña son obligatorios' });
+  }
+  if (USERS.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+    return res.status(409).json({ statusCode: 409, message: 'El correo ya está registrado' });
+  }
+  if (!['Administrador', 'Aprendiz', 'Instructor'].includes(role)) {
+    return res.status(400).json({ statusCode: 400, message: 'Rol no válido' });
+  }
+  const newUser = { id: Date.now(), nombreCompleto, email, password, role };
+  USERS.push(newUser);
+  return res.status(201).json({ message: 'Cuenta creada correctamente', user: { id: newUser.id, nombreCompleto, email, role } });
+});
 app.post('/api/v1/auth/logout', authenticateToken, (req, res) => {
   return res.json({ statusCode: 200, message: 'Sesión cerrada exitosamente en el servidor' });
 });

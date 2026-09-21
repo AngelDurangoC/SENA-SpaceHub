@@ -293,6 +293,7 @@
 .editor-subtitle { margin: 9px 0 0; color: #8191a5; font-size: 0.86rem; }
 .editor-code { padding: 8px 11px; color: #86efac; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(57, 211, 83, 0.3); border-radius: 7px; font: 800 0.72rem "Consolas", monospace; white-space: nowrap; }
 .equipment-form { display: grid; gap: 20px; }
+.editor-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .form-field { display: grid; gap: 8px; }
 .form-field label { color: #b8c6d6; font: 800 0.72rem "Consolas", monospace; letter-spacing: 0.05em; text-transform: uppercase; }
 .form-field input, .form-field select { width: 100%; min-height: 44px; box-sizing: border-box; padding: 0 13px; color: #f8fafc; background: #091523; border: 1px solid #2a4058; border-radius: 8px; outline: none; font: 0.88rem "Trebuchet MS", sans-serif; }
@@ -304,7 +305,88 @@
 
 @media (max-width: 560px) {
   .equipment-editor { padding: 22px 16px; }
+  .editor-form-grid { grid-template-columns: 1fr; }
   .editor-heading { flex-direction: column; }
   .editor-actions { flex-direction: column-reverse; }
   .editor-actions button { width: 100%; text-align: center; }
+}
+
+/* Shared shell styles used by the API-driven routes. */
+.layout-shell {
+  min-height: 100vh;
+  background: #08111f;
+  color: #dbe7f4;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.spacehub-navbar {
+  background: #0d1b2e;
+  border-bottom: 1px solid #203750;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+}
+
+.spacehub-navbar-inner, .session-bar, .content-viewport {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.spacehub-navbar-inner {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+.spacehub-brand { display: flex; align-items: center; gap: 11px; color: #f8fafc; font-weight: 800; font-size: 1.2rem; text-decoration: none; }
+.spacehub-brand strong { color: #51e06d; }
+.spacehub-brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #39d353; color: #07111f; font-weight: 900; }
+.spacehub-nav { display: flex; gap: 8px; }
+.spacehub-nav a { color: #94a8bd; padding: 10px 14px; border-radius: 8px; font-size: .86rem; font-weight: 700; text-decoration: none; transition: .2s ease; }
+.spacehub-nav a:hover, .spacehub-nav a:focus { color: #fff; background: #17304b; }
+
+.session-bar { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.session-user { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; font-size: .82rem; }
+.session-dot { width: 8px; height: 8px; border-radius: 50%; background: #45dc69; box-shadow: 0 0 12px #45dc69; }
+.session-label { color: #7890a8; text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
+.session-role { color: #51e06d; background: rgba(57, 211, 83, .12); border: 1px solid rgba(57, 211, 83, .3); border-radius: 999px; padding: 4px 9px; font-size: .68rem; font-weight: 800; }
+.logout-button { border: 1px solid #7c3341; border-radius: 7px; padding: 8px 13px; background: #3a1724; color: #ffb8c1; cursor: pointer; font-size: .75rem; font-weight: 800; }
+.logout-button:hover { background: #762b3d; color: #fff; }
+.content-viewport { padding: 36px 0 56px; }
+
+.inventory-page { background: #111b2b; border: 1px solid #233752; border-radius: 16px; padding: 30px; box-shadow: 0 18px 45px rgba(0, 0, 0, .22); }
+.inventory-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+.section-kicker { color: #4dde70; font-size: .68rem; font-weight: 800; letter-spacing: .16em; margin-bottom: 7px; }
+.inventory-heading h2 { color: #f4f8fc; font-size: 1.6rem; margin: 0 0 7px; }
+.inventory-description { color: #849ab0; font-size: .82rem; }
+.primary-action { background: #39d353; color: #07111f; border-radius: 8px; padding: 11px 15px; font-size: .77rem; font-weight: 900; text-decoration: none; white-space: nowrap; transition: .2s ease; }
+.primary-action:hover { background: #6deb83; transform: translateY(-1px); }
+.inventory-error { background: #401c2b; border: 1px solid #a9445b; color: #ffbdc7; padding: 12px 14px; border-radius: 8px; margin-bottom: 18px; font-size: .8rem; }
+.inventory-loading { color: #8da2b8; text-align: center; padding: 42px; font-size: .85rem; }
+.inventory-table-wrap { overflow-x: auto; border: 1px solid #273d58; border-radius: 10px; }
+.inventory-table { width: 100%; border-collapse: collapse; color: #adc0d3; font-size: .78rem; text-align: left; }
+.inventory-table th { background: #0a1423; color: #7990a7; padding: 14px 16px; text-transform: uppercase; letter-spacing: .08em; font-size: .64rem; white-space: nowrap; }
+.inventory-table td { padding: 15px 16px; border-top: 1px solid #20344d; vertical-align: middle; }
+.inventory-table tbody tr { transition: background .2s ease; }
+.inventory-table tbody tr:hover { background: #172940; }
+.equipment-code { color: #52e373; font-weight: 900; font-family: Consolas, monospace; }
+.equipment-name { color: #f3f7fb; font-weight: 700; }
+.equipment-status { display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: .65rem; font-weight: 800; white-space: nowrap; }
+.is-operational { color: #6bea88; background: rgba(57, 211, 83, .13); }
+.is-maintenance { color: #ffd071; background: rgba(245, 181, 55, .13); }
+.equipment-actions { text-align: right; white-space: nowrap; }
+.edit-action, .delete-action { display: inline-block; border: 0; border-radius: 6px; padding: 6px 9px; font-size: .7rem; font-weight: 800; text-decoration: none; cursor: pointer; }
+.edit-action { color: #8bd7ff; background: #153751; }
+.delete-action { color: #ffc0c9; background: #572431; margin-left: 6px; }
+.edit-action:hover { background: #1d638b; color: #fff; }
+.delete-action:hover { background: #8d3044; color: #fff; }
+
+@media (max-width: 700px) {
+  .spacehub-navbar-inner, .session-bar, .content-viewport { width: min(100% - 28px, 1180px); }
+  .spacehub-navbar-inner, .inventory-heading { align-items: flex-start; flex-direction: column; }
+  .spacehub-navbar-inner { gap: 10px; padding: 15px 0; }
+  .spacehub-nav { width: 100%; }
+  .spacehub-nav a { flex: 1; text-align: center; }
+  .session-bar { align-items: flex-start; padding: 14px 0; }
+  .inventory-page { padding: 20px 14px; }
+  .primary-action { width: 100%; text-align: center; }
 }
