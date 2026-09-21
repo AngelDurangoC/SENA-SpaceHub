@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Prestamos.css';
 
 export default function Prestamos({ prestamos = [], setPrestamos, equipos = [], usuarioActual }) {
-  const rol = (usuarioActual?.rol || '').toLowerCase();
+  const rol = (usuarioActual?.role || '').toLowerCase();
   const esAdmin = rol.includes('admin') || rol.includes('operario');
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);

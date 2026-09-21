@@ -1,15 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Inventario.css';
 
 export default function Inventario({ equipos = [], setEquipos, usuarioActual }) {
   
-  const rol = (usuarioActual?.rol || '').toLowerCase();
+  const rol = (usuarioActual?.role || '').toLowerCase();
   const esAdmin = rol.includes('admin') || rol.includes('operario');
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [placa, setPlaca] = useState('');
   const [nombre, setNombre] = useState('');
   const [ram, setRam] = useState('16GB RAM DDR4');
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
+
+  const cargarEquipos = async (signal) => {
+    setCargando(true);
+    setError('');
+
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    try {
+      const respuesta = await fetch('/api/v1/equipos', { headers, signal });
+
+      if (!respuesta.ok) {
+        throw new Error(`No se pudo cargar el inventario (${respuesta.status})`);
+      }
+
+      const equiposApi = await respuesta.json();
+      const equiposNormalizados = equiposApi.map((equipo, indice) => ({
+        ...equipo,
+        id: equipo.id ?? equipo.idEquipo ?? equipo.placaSena ?? `equipo-${indice}`,
+        placa: equipo.placa ?? equipo.placaSena ?? '',
+        nombre: equipo.nombre ?? equipo.modelo ?? equipo.marcaModelo ?? 'Equipo sin nombre',
+        especificacion: equipo.especificacion ?? equipo.ram ?? equipo.memoriaRam ?? 'Sin especificación',
+        estado: equipo.estado ?? equipo.estadoEquipo ?? 'Sin estado'
+      }));
+
+      setEquipos(equiposNormalizados);
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        setError(e.message || 'No se pudo cargar el inventario.');
+      }
+    } finally {
+      if (!signal.aborted) {
+        setCargando(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    cargarEquipos(controller.signal);
+
+    return () => controller.abort();
+  }, []);
 
   const agregarEquipo = (e) => {
     e.preventDefault();
@@ -107,6 +152,15 @@ export default function Inventario({ equipos = [], setEquipos, usuarioActual }) 
         </div>
       )}
 
+      {error && (
+        <div className="inventario-alert" role="alert">
+          <span>{error}</span>
+          <button type="button" onClick={() => cargarEquipos(new AbortController().signal)}>
+            Reintentar
+          </button>
+        </div>
+      )}
+
       <div className="list-container dark-card">
         <table className="inventario-table">
           <thead>
@@ -119,7 +173,15 @@ export default function Inventario({ equipos = [], setEquipos, usuarioActual }) 
             </tr>
           </thead>
           <tbody>
-            {equipos.map((eq) => (
+            {cargando ? (
+              <tr>
+                <td colSpan="5" className="tabla-mensaje">Cargando equipos...</td>
+              </tr>
+            ) : equipos.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="tabla-mensaje">No hay equipos registrados.</td>
+              </tr>
+            ) : equipos.map((eq) => (
               <tr key={eq.id}>
                 <td className="placa-code">{eq.placa}</td>
                 <td className="equipo-nombre">{eq.nombre}</td>

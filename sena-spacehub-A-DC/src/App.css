@@ -168,3 +168,143 @@
     width: 100%;
   }
 }
+
+/* Application shell and inventory surface */
+.app-shell {
+  min-height: 100vh;
+  background: #07111f;
+  color: #e2e8f0;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.app-navbar {
+  background: #0b1728;
+  border-bottom: 1px solid #20334a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.nav-inner, .session-bar, .page-content {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.nav-inner {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.brand-link {
+  color: #f8fafc;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-link span { color: #39d353; }
+.main-nav { display: flex; align-items: center; gap: 8px; }
+.nav-link { color: #94a3b8; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
+.nav-link:hover, .nav-link:focus { color: #f8fafc; background: #14263b; }
+.nav-status { margin-left: auto; color: #64748b; font: 700 0.65rem/1 "Consolas", monospace; letter-spacing: 0.12em; }
+
+.session-bar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #1b2d42;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.session-user { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.session-user strong { color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.session-label { color: #64748b; text-transform: uppercase; font: 700 0.65rem/1 "Consolas", monospace; letter-spacing: 0.08em; }
+.session-role { padding: 4px 9px; color: #8df59b; background: rgba(57, 211, 83, 0.1); border: 1px solid rgba(57, 211, 83, 0.28); border-radius: 999px; font: 700 0.65rem/1 "Consolas", monospace; }
+.online-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: #39d353; box-shadow: 0 0 0 4px rgba(57, 211, 83, 0.12); }
+.logout-button { border: 1px solid #71303a; border-radius: 7px; padding: 7px 12px; color: #fecdd3; background: #351b26; cursor: pointer; font-size: 0.75rem; font-weight: 800; }
+.logout-button:hover { background: #7f1d2d; }
+.page-content { padding: 38px 0 56px; }
+
+.inventory-panel { padding: 30px; background: #0d1b2d; border: 1px solid #20334a; border-radius: 16px; box-shadow: 0 22px 50px rgba(0, 0, 0, 0.2); }
+.inventory-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.section-kicker { margin: 0 0 8px; color: #39d353; font: 800 0.68rem/1 "Consolas", monospace; letter-spacing: 0.16em; }
+.inventory-heading h1 { margin: 0; color: #f8fafc; font: 800 2rem/1.15 "Trebuchet MS", sans-serif; letter-spacing: -0.04em; }
+.section-description { margin: 9px 0 0; color: #8191a5; font-size: 0.86rem; }
+.primary-action { display: inline-flex; align-items: center; gap: 8px; padding: 11px 15px; border-radius: 8px; background: #39d353; color: #07111f; font-size: 0.78rem; font-weight: 900; text-decoration: none; white-space: nowrap; }
+.primary-action:hover { background: #69e97d; }
+.primary-action span { font-size: 1.15rem; line-height: 0.7; }
+.api-error { margin-bottom: 18px; padding: 12px 14px; color: #fecdd3; background: #3b1824; border: 1px solid #8b3445; border-radius: 8px; font: 0.75rem/1.4 "Consolas", monospace; }
+.loading-state { padding: 42px; color: #8191a5; text-align: center; font: 0.8rem "Consolas", monospace; }
+.table-wrap { overflow-x: auto; border: 1px solid #20334a; border-radius: 10px; }
+.inventory-table { width: 100%; min-width: 720px; border-collapse: collapse; color: #aebdcd; font: 0.78rem/1.4 "Consolas", monospace; }
+.inventory-table th { padding: 14px 16px; color: #6f8298; background: #091523; border-bottom: 1px solid #20334a; text-align: left; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.inventory-table td { padding: 16px; border-bottom: 1px solid #182b40; white-space: nowrap; }
+.inventory-table tbody tr:last-child td { border-bottom: 0; }
+.inventory-table tbody tr:hover { background: #11263b; }
+.equipment-code { color: #63e873; font-weight: 800; }
+.equipment-name { color: #f1f5f9; font-family: "Trebuchet MS", sans-serif; font-weight: 700; }
+.status-pill { display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: 0.65rem; font-weight: 800; }
+.is-operational { color: #86efac; background: rgba(34, 197, 94, 0.12); }
+.is-maintenance { color: #fcd34d; background: rgba(245, 158, 11, 0.13); }
+.table-actions { text-align: right; }
+.edit-action, .delete-action { display: inline-block; border: 0; border-radius: 6px; padding: 6px 9px; font-size: 0.7rem; font-weight: 800; text-decoration: none; cursor: pointer; }
+.edit-action { color: #93c5fd; background: #172f4a; }
+.edit-action:hover { background: #1d4f7d; }
+.delete-action { margin-left: 7px; color: #fda4af; background: #481e2a; }
+.delete-action:hover { background: #8b2538; }
+
+@media (max-width: 700px) {
+  .nav-inner, .session-bar, .page-content { width: min(100% - 28px, 1180px); }
+  .nav-inner { min-height: auto; padding: 16px 0; flex-wrap: wrap; gap: 12px; }
+  .main-nav { order: 3; width: 100%; }
+  .nav-status { display: none; }
+  .session-bar { align-items: flex-start; flex-direction: column; padding: 12px 0; }
+  .inventory-panel { padding: 20px 14px; }
+  .inventory-heading { align-items: flex-start; flex-direction: column; }
+  .inventory-heading h1 { font-size: 1.65rem; }
+}
+
+.equipment-editor {
+  width: min(100%, 700px);
+  margin: 0 auto;
+  padding: 32px;
+  background: #0d1b2d;
+  border: 1px solid #20334a;
+  border-radius: 16px;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.2);
+}
+
+.editor-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #20334a;
+  margin-bottom: 24px;
+}
+
+.editor-heading h1 { margin: 0; color: #f8fafc; font: 800 2rem/1.15 "Trebuchet MS", sans-serif; letter-spacing: -0.04em; }
+.editor-subtitle { margin: 9px 0 0; color: #8191a5; font-size: 0.86rem; }
+.editor-code { padding: 8px 11px; color: #86efac; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(57, 211, 83, 0.3); border-radius: 7px; font: 800 0.72rem "Consolas", monospace; white-space: nowrap; }
+.equipment-form { display: grid; gap: 20px; }
+.form-field { display: grid; gap: 8px; }
+.form-field label { color: #b8c6d6; font: 800 0.72rem "Consolas", monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+.form-field input, .form-field select { width: 100%; min-height: 44px; box-sizing: border-box; padding: 0 13px; color: #f8fafc; background: #091523; border: 1px solid #2a4058; border-radius: 8px; outline: none; font: 0.88rem "Trebuchet MS", sans-serif; }
+.form-field input:focus, .form-field select:focus { border-color: #39d353; box-shadow: 0 0 0 3px rgba(57, 211, 83, 0.12); }
+.editor-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 8px; }
+.secondary-action { padding: 11px 14px; color: #b8c6d6; background: #172a40; border: 1px solid #2a4058; border-radius: 8px; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+.secondary-action:hover { background: #203b58; color: #f8fafc; }
+.editor-actions .primary-action { border: 0; cursor: pointer; }
+
+@media (max-width: 560px) {
+  .equipment-editor { padding: 22px 16px; }
+  .editor-heading { flex-direction: column; }
+  .editor-actions { flex-direction: column-reverse; }
+  .editor-actions button { width: 100%; text-align: center; }
+}

@@ -210,6 +210,35 @@
   overflow-x: auto;
 }
 
+.inventario-alert {
+  align-items: center;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  color: #fca5a5;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+}
+
+.inventario-alert button {
+  background-color: transparent;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  color: #fca5a5;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 12px;
+}
+
+.tabla-mensaje {
+  color: #9ca3af;
+  padding: 32px 16px !important;
+  text-align: center;
+}
+
 @media (max-width: 560px) {
   .inventario-container {
     padding: 16px;
