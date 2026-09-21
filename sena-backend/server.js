@@ -17,7 +17,7 @@ app.use(express.json());
 
 const USERS = [
   { id: 999, nombreCompleto: 'Ing. Roberto Gómez', email: 'roberto.gomez@sena.edu.co', password: 'admin123password', role: 'Administrador' },
-  { id: 101, nombreCompleto: 'Ana María Fajardo', email: 'ana.fajardo@sena.edu.co', password: 'aprendiz123password', role: 'Aprendiz' },
+  { id: 101, nombreCompleto: 'Ana María Fajardo', email: 'ana.fajardo@sena.edu.co', password: 'aprendiz123password', role: 'Aprendiz', ficha: 'ADSO-2873711' },
   { id: 202, nombreCompleto: 'Prof. Juan Carlos Pérez', email: 'instructor.perez@sena.edu.co', password: 'instructor123password', role: 'Instructor' }
 ];
 
@@ -28,6 +28,24 @@ let EQUIPOS = [
   { id: 4, placaSena: "SENA-1004", marcaModelo: "Lenovo ThinkPad L14 G3", ram: "16GB DDR4", ambiente: "Ambiente 303 - Hardware", estado: "Operativo" },
   { id: 5, placaSena: "SENA-1005", marcaModelo: "ASUS ExpertBook P2", ram: "8GB DDR4", ambiente: "Taller Prototipado 3D", estado: "Operativo" }
 ];
+
+let PRESTAMOS = [
+  { id: 1, userId: 101, equipoPlaca: 'SENA-1001', horaInicio: '08:00 AM', estado: 'Activo', creadoPorRol: 'Aprendiz' }
+];
+
+const getPrestamosConDetalles = (prestamos) => prestamos.map((prestamo) => {
+  const usuario = USERS.find((user) => user.id === prestamo.userId);
+  return {
+    id: prestamo.id,
+    userId: prestamo.userId,
+    aprendiz: usuario?.nombreCompleto || 'Desconocido',
+    ficha: usuario?.ficha || 'N/A',
+    equipoPlaca: prestamo.equipoPlaca,
+    horaInicio: prestamo.horaInicio,
+    estado: prestamo.estado,
+    creadoPorRol: prestamo.creadoPorRol
+  };
+});
 
 // Middleware de Validación JWT
 const authenticateToken = (req, res, next) => {
@@ -78,6 +96,48 @@ app.post('/api/v1/auth/register', (req, res) => {
 });
 app.post('/api/v1/auth/logout', authenticateToken, (req, res) => {
   return res.json({ statusCode: 200, message: 'Sesión cerrada exitosamente en el servidor' });
+});
+
+app.get('/api/v1/prestamos', authenticateToken, (req, res) => {
+  const prestamos = req.user.role === 'Aprendiz'
+    ? PRESTAMOS.filter((prestamo) => prestamo.userId === Number(req.user.sub))
+    : PRESTAMOS;
+  return res.json(getPrestamosConDetalles(prestamos));
+});
+
+app.post('/api/v1/prestamos', authenticateToken, (req, res) => {
+  const { aprendizId, equipoPlaca } = req.body;
+  const userId = req.user.role === 'Aprendiz' ? Number(req.user.sub) : Number(aprendizId);
+  const usuario = USERS.find((user) => user.id === userId && user.role === 'Aprendiz');
+  const equipo = EQUIPOS.find((item) => item.placaSena.toUpperCase() === String(equipoPlaca || '').toUpperCase());
+
+  if (!usuario) return res.status(404).json({ statusCode: 404, message: 'Aprendiz no encontrado' });
+  if (!equipo) return res.status(404).json({ statusCode: 404, message: 'Equipo no encontrado' });
+  if (equipo.estado !== 'Operativo') return res.status(409).json({ statusCode: 409, message: 'El equipo no está disponible' });
+  if (PRESTAMOS.some((prestamo) => prestamo.equipoPlaca === equipo.placaSena && prestamo.estado === 'Activo')) {
+    return res.status(409).json({ statusCode: 409, message: 'El equipo ya tiene un préstamo activo' });
+  }
+
+  const nuevoPrestamo = {
+    id: Date.now(),
+    userId,
+    equipoPlaca: equipo.placaSena,
+    horaInicio: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    estado: 'Activo',
+    creadoPorRol: req.user.role
+  };
+  PRESTAMOS.unshift(nuevoPrestamo);
+  return res.status(201).json(getPrestamosConDetalles([nuevoPrestamo])[0]);
+});
+
+app.put('/api/v1/prestamos/:id/devolver', authenticateToken, (req, res) => {
+  const prestamo = PRESTAMOS.find((item) => item.id === Number(req.params.id));
+  if (!prestamo) return res.status(404).json({ statusCode: 404, message: 'Préstamo no encontrado' });
+  if (req.user.role === 'Aprendiz' && prestamo.userId !== Number(req.user.sub)) {
+    return res.status(403).json({ statusCode: 403, message: 'No puedes devolver este préstamo' });
+  }
+  prestamo.estado = 'Devuelto';
+  return res.json(getPrestamosConDetalles([prestamo])[0]);
 });
 
 app.get('/api/v1/equipos', authenticateToken, (req, res) => res.json(EQUIPOS));

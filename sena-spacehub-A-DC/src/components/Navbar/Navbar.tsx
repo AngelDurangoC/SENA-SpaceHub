@@ -16,6 +16,7 @@ export default function NavBar() {
         <nav className="spacehub-nav" aria-label="Navegación principal">
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/inventario">Inventario de equipos</Link>
+          <Link to="/prestamos">Préstamos</Link>
         </nav>
       </div>
     </header>
